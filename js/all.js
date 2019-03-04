@@ -28,12 +28,12 @@ function displayResults(parsedResponse) {
     const formattedTitle = item.title.trim().substr(0,1).toUpperCase() + item.title.trim().substr(1,item.title.length);
     searchDropdown.insertAdjacentHTML('beforeend', `
       <li style="animation-delay: ${index * 50}ms;">
-      <a href="#" data-image="${item.images.downsized_medium.url}" data-title="${formattedTitle}">
-      <span>
-      ${formattedTitle}
-      </span>
-      <i class="fas fa-plus"></i>
-      </a>
+        <a href="#" data-image="${item.images.downsized_medium.url}" data-title="${formattedTitle}">
+          <span>
+            ${formattedTitle}
+          </span>
+          <i class="fas fa-plus"></i>
+        </a>
       </li>
       `)
   })
@@ -42,19 +42,19 @@ function displayResults(parsedResponse) {
 function renderResult(item, index) {
   resultsWrapper.insertAdjacentHTML('beforeend', `
     <div class="result" style="background-image:url('${item.image}');animation-delay:${index * 100}ms;">
-    <div class="overlay">
-    <i class="fas fa-times remove" data-index="${item.id}"></i>
-    <strong>
-    ${item.title}
-    </strong>
-    <div class="stars ${item.rating > 0 ? 'rated' : ''}" data-index="${item.id}">
-    <i class="fas fa-star ${item.rating === 1 ? 'active' : ''}" data-value="1"></i>
-    <i class="fas fa-star ${item.rating === 2 ? 'active' : ''}" data-value="2"></i>
-    <i class="fas fa-star ${item.rating === 3 ? 'active' : ''}" data-value="3"></i>
-    <i class="fas fa-star ${item.rating === 4 ? 'active' : ''}" data-value="4"></i>
-    <i class="fas fa-star ${item.rating === 5 ? 'active' : ''}" data-value="5"></i>
-    </div>
-    </div>
+      <div class="overlay">
+        <i class="fas fa-times remove" data-index="${item.id}"></i>
+        <strong>
+          ${item.title}
+        </strong>
+        <div class="stars ${item.rating > 0 ? 'rated' : ''}" data-index="${item.id}">
+          <i class="fas fa-star ${item.rating === 1 ? 'active' : ''}" data-value="1"></i>
+          <i class="fas fa-star ${item.rating === 2 ? 'active' : ''}" data-value="2"></i>
+          <i class="fas fa-star ${item.rating === 3 ? 'active' : ''}" data-value="3"></i>
+          <i class="fas fa-star ${item.rating === 4 ? 'active' : ''}" data-value="4"></i>
+          <i class="fas fa-star ${item.rating === 5 ? 'active' : ''}" data-value="5"></i>
+        </div>
+      </div>
     </div>
     `)
   applyRatingEventListeners();
@@ -77,8 +77,12 @@ function applyRatingEventListeners() {
   })
   document.querySelectorAll('.result .overlay .remove').forEach((item) => {
     item.addEventListener('click', (event) => {
-      const idForRemove = event.currentTarget.dataset.index;
-      items.splice(items.findIndex(item => item.id === idForRemove), 1);
+      const idForRemove = Number.parseInt(event.currentTarget.dataset.index);
+      const indexForRemove = items.findIndex(item => item.id === idForRemove);
+      if(indexForRemove === -1) {
+        return
+      }
+      items.splice(indexForRemove, 1);
       saveItems();
       resultsWrapper.innerHTML = "";
       items.forEach((item, index) => {
